@@ -138,6 +138,16 @@ MESSAGE_TAGS = {
     
 }
 
+
+
+
+#smtp configurations
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # For TLS
+EMAIL_USE_TLS = True  # Use TLS (secure connection)
+EMAIL_HOST_USER = 'yaredbeby08@gmail.com'  # Your email
+EMAIL_HOST_PASSWORD = ''  # Use an App Password (not your main password)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
