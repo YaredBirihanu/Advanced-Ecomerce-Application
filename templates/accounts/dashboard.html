@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+{% include 'includes/alerts.html' %}
+
+<div class="container">
+	<div class="row">
+	<aside class="col-md-3">
+		<!--   SIDEBAR   -->
+		<ul class="list-group">
+			<a class="list-group-item active" href="#"> My order history </a>
+			<a class="list-group-item" href="#"> Transactions </a>
+			<a class="list-group-item" href="#"> Return and refunds </a>
+			<a class="list-group-item" href="#">Settings </a>
+			<a class="list-group-item" href="#"> My Selling Items </a>
+			<a class="list-group-item" href="#"> Received orders </a>
+		</ul>
+		<br>
+		<a class="btn btn-light btn-block" href="#"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
+		<!--   SIDEBAR .//END   -->
+	</aside>
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Order ID: 6123456789</strong>
+			<span>Order Date: 16 December 2018</span>
+		</header>
+		<div class="card-body">
+			<div class="row"> 
+				<div class="col-md-8">
+					<h6 class="text-muted">Delivery to</h6>
+					<p>Michael Jackson <br>  
+					Phone +1234567890 Email: myname@pixsellz.com <br>
+			    	Location: Home number, Building name, Street 123,  Tashkent, UZB <br> 
+			    	P.O. Box: 100123
+			 		</p>
+				</div>
+				<div class="col-md-4">
+					<h6 class="text-muted">Payment</h6>
+					<span class="text-success">
+						<i class="fab fa-lg fa-cc-visa"></i>
+					    Visa  **** 4216  
+					</span>
+					<p>Subtotal: $356 <br>
+					 Shipping fee:  $56 <br> 
+					 <span class="b">Total:  $456 </span>
+					</p>
+				</div>
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		<div class="table-responsive">
+		<table class="table table-hover">
+			<tr>
+				<td width="65">
+					<img src="../images/items/1.jpg" class="img-xs border">
+				</td>
+				<td> 
+					<p class="title mb-0">Product name goes here </p>
+					<var class="price text-muted">USD 145</var>
+				</td>
+				<td> Seller <br> Nike clothing </td>
+				<td width="250"> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
+			</tr>
+			<tr>
+				<td>
+					<img src="../images/items/2.jpg" class="img-xs border">
+				</td>
+				<td> 
+					<p class="title mb-0">Another name goes here </p>
+					<var class="price text-muted">USD 15</var>
+				</td>
+				<td> Seller <br> ABC shop </td>
+				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
+			</tr>
+			<tr>
+				<td>
+					<img src="../images/items/3.jpg" class="img-xs border">
+				</td>
+				<td> 
+					<p class="title mb-0">The name of the product  goes here </p>
+					<var class="price text-muted">USD 145</var>
+				</td>
+				<td> Seller <br> Wallmart </td>
+				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
+			</tr>
+		</table>
+		</div> <!-- table-responsive .end// -->
+		</article> <!-- order-group.// --> 
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y bg">  <!-- Fixed typo: was section-conten -->
+{% include 'includes/alerts.html' %}
+
+<div class="container">
+    <div class="row">
+        <aside class="col-md-3">
+            <!-- SIDEBAR -->
+            <ul class="list-group">
+                <a class="list-group-item active" href="{% url 'dashboard' %}">My order history</a>
+                <a class="list-group-item" href="#">Transactions</a>
+                <a class="list-group-item" href="#">Return and refunds</a>
+                <a class="list-group-item" href="#">Settings</a>
+                <a class="list-group-item" href="#">My Selling Items</a>
+                <a class="list-group-item" href="#">Received orders</a>
+            </ul>
+            <br>
+            <a class="btn btn-light btn-block" href="{% url 'logout' %}">
+                <i class="fa fa-power-off"></i> <span class="text">Log out</span>
+            </a>
+            <!-- SIDEBAR END -->
+        </aside>
+        <main class="col-md-9">
+            {% if orders %}
+                {% for order in orders %}
+                    <article class="card mb-4">
+                        <header class="card-header">
+                            <strong class="d-inline-block mr-3">Order ID: {{ order.order_number|default:"N/A" }}</strong>
+                            <span>Order Date: {{ order.created_at|date:"d F Y"|default:"N/A" }}</span>
+                        </header>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="text-muted">Delivery to</h6>
+                                    <p>
+                                        {{ order.full_name|default:"Not specified" }} <br>
+                                        Phone: {{ order.phone|default:"Not provided" }} <br>
+                                        Email: {{ order.email|default:"Not provided" }} <br>
+                                        {{ order.address_line_1|default:"" }}
+                                        {% if order.address_line_2 %}, {{ order.address_line_2 }}{% endif %}<br>
+                                        {{ order.city|default:"" }}, {{ order.state|default:"" }}, {{ order.country|default:"" }} <br>
+                                        P.O. Box: {{ order.postal_code|default:"Not provided" }}
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="text-muted">Payment</h6>
+                                    <span class="text-success">
+                                        <i class="fab fa-lg fa-cc-visa"></i>
+                                        {{ order.payment_method|default:"Visa" }} **** {{ order.card_last_four|default:"XXXX" }}
+                                    </span>
+                                    <p>
+                                        Subtotal: ${{ order.subtotal|floatformat:2|default:"0.00" }} <br>
+                                        Shipping fee: ${{ order.shipping_fee|floatformat:2|default:"0.00" }} <br>
+                                        <span class="b">Total: ${{ order.total|floatformat:2|default:"0.00" }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% for item in order.items %}
+                                    <tr>
+                                        <td width="65">
+                                            <img src="{{ item.product.image.url|default:'/static/images/default-product.jpg' }}" 
+                                                 class="img-xs border" 
+                                                 alt="{{ item.product.name }}">
+                                        </td>
+                                        <td>
+                                            <p class="title mb-0">{{ item.product.name|default:"Product" }}</p>
+                                            <var class="price text-muted">USD {{ item.price|floatformat:2|default:"0.00" }}</var>
+                                        </td>
+                                        <td>Seller<br>{{ item.seller|default:"Store" }}</td>
+                                        <td width="250">
+                                            <a href="{% url 'track_order' order.id %}" class="btn btn-outline-primary">Track order</a>
+                                            <a href="{% url 'order_detail' order.id %}" class="btn btn-light">Details</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4">No items in this order</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5>No orders found</h5>
+                            <a href="{% url 'store' %}" class="btn btn-primary mt-3">Start Shopping</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5>No orders found</h5>
+                        <a href="{% url 'store' %}" class="btn btn-primary mt-3">Start Shopping</a>
+                    </div>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+{% endblock content %} {% endcomment %}
