@@ -1,12 +1,65 @@
 from django.shortcuts import render,redirect
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from carts.models import Cart,CartItem
 from .forms import OrderForm
-from .models import Order
+from .models import Order,OrderProduct
+from store.models import Product
 import datetime
+
+def order_complete(request):
+    return render(request,'orders/order_complete'.html,{})
 
 
 def payments(request):
+
+    #move the cart item to the order product table
+
+    # cart_items=CartItem.object.filter(user=request.user)
+    # for item in cart_items:
+    #     orderproduct=OrderProduct()
+    #     orderproduct.order_id=order.id
+    #     orderproduct.payment=payment
+    #     orderproduct.user_id=user.id
+    #     orderproduct.product_id=item.product.id
+    #     orderproduct.quantity=item.quantity
+    #     orderproduct.product_price=item.product_price
+    #     orderproduct.ordered=True
+    #     orderproduct.save()
+
+    # cart_item=CartItem.objects.get(id=item.id)
+    # product_variation=cart_item.variations.all()
+    # orderproduct=orderproduct.objects.get(id=orderproduct.id)
+    # orderproduct.variations,set(product_variation)
+    # orderproduct.save()
+
+
+    # #reduce sold item
+    # product=Product.objects.get(id=item.product_id)
+    # product.stock -= item.quantity
+    # product.save()
+
+    # #clear cart
+    # CartItem.objects.get(user=request.user).delete()
+
+    # mail_subject = 'Thank you for your order'
+    # message = render_to_string('accounts/order_recieved_email.html', {
+    #     'user': request.user,
+    #     'order':order,
+            
+    #     })
+    #     to_email = request.user.email
+    #     send_email = EmailMessage(mail_subject, message, to=[to_email])
+    #     send_email.send()
+    
     return render(request,'orders/payments.html')
+
+    
+
+
+
+
+    
 
 
 def place_order(request, total=0, quantity=0):
