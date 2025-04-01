@@ -1,14 +1,36 @@
 from django.shortcuts import render,redirect
+from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from carts.models import Cart,CartItem
 from .forms import OrderForm
+from .models import Payment
 from .models import Order,OrderProduct
 from store.models import Product
 import datetime
 
 def order_complete(request):
-    return render(request,'orders/order_complete'.html,{})
+    order_number=request.GET.get('order_number')
+    transID=request.GET.get('trans_id')
+    try:
+        order=Order.objects.get(order_number=order_number,is_ordered=True)
+        ordered_products=OrderProduct.objects.filter(order_id=order.id)
+        subtotal=0
+        for i in ordered_products:
+            subtotal+=i.product_price*i.quantity
+
+        payment=Payment.objects.get(payment_id=payment.id)
+        context={
+            'order':order,
+            'ordered_products':ordered_products,
+            'payment':payment,
+            'payment_method':payment.payment_method,
+            'order_number':order_number,
+            'transID':transID,
+            'sub_total':subtotal,
+            'order_date':datetime.datetime.now()
+        }
+    return render(request,'orders/order_complete.html',{})
 
 
 def payments(request):
@@ -51,6 +73,11 @@ def payments(request):
     #     to_email = request.user.email
     #     send_email = EmailMessage(mail_subject, message, to=[to_email])
     #     send_email.send()
+
+    data={
+        'order_number':order_number,
+        'transID':payment.product_id,
+    }
     
     return render(request,'orders/payments.html')
 
