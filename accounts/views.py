@@ -12,6 +12,7 @@ from .forms import RegistrationForm
 from .models import Account
 from carts.views import _cart_id
 from carts.models import CartItem, Cart  # Added Cart import
+import requests
 
 def register(request):
     if request.method == 'POST':
@@ -98,7 +99,15 @@ def login(request):
             
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('dashboard')
+            url=request.META.get('HTTP_REFERER')  # Fixed to use HTTP_REFERER
+            try:
+                query=requests.utils.urlparse(url).query
+                params=dict(x.split('+') for x in query.split('&')) # Fixed to use dict comprehension
+                if "next" in params:
+                    nextPage=params["next"]
+                    return redirect(nextPage)
+            except:
+                return redirect('dashboard')
         else:
             messages.error(request, 'Invalid credentials')  # Fixed typo
             return redirect('login')
