@@ -6,23 +6,24 @@
 <section class="section-content padding-y bg">
     <div class="container">
         <!-- ============================ COMPONENT 1 ================================= -->
-        
+        <h4>Review your order and make Payment<h4/>
             <div class="row">
                 <aside class="col-lg-8">
                     <div class="card">
                         <div class="card-header">
                             <h5>Billing Address</h5>
                         </div>
+                        
                         <div class="card-body">
-                            <p class="card-text">{{ orders.full_name }}</p>
-                            <p class="card-text">{{ orders.full_address }}</p>
-                            <p class="card-text">{{ orders.city }},{{ orders.state }}</p>
-                            <p class="card-text">{{ orders.country }}</p>
-                            <p class="card-text">{{ orders.phone }}</p>
-                            <p class="card-text">{{ orders.email }}</p>
+                            <p class="card-text">{{ order.full_name }}</p>
+                            <p class="card-text">{{ order.full_address }}</p>
+                            <p class="card-text">{{ order.city }}{{ order.state }}</p>
+                            <p class="card-text">{{ order.country }}</p>
+                            <p class="card-text">{{ order.phone }}</p>
+                            <p class="card-text">{{ order.email }}</p>
 
-                            {% if orders.order_note %}
-                                {{ orders.order_note}}
+                            {% if order.order_note %}
+                                {{ order.order_note }}
                             {% endif %}
                 </div>
                 </div>
