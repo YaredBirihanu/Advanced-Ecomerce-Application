@@ -13,7 +13,7 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.payment_method} - {self.payment_id}"
+        return self.payment_id
 
 
 class Order(models.Model):
@@ -52,6 +52,8 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.order_number} - {self.full_name()}"
+
+
 
 
 class OrderProduct(models.Model):

@@ -6,135 +6,276 @@
 <section class="section-content padding-y bg">
     <div class="container">
         <!-- ============================ COMPONENT 1 ================================= -->
-        <h4>Review your order and make Payment<h4/>
-            <div class="row">
-                <aside class="col-lg-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Billing Address</h5>
-                        </div>
-                        
-                        <div class="card-body">
-                            <p class="card-text">{{ order.full_name }}</p>
-                            <p class="card-text">{{ order.full_address }}</p>
-                            <p class="card-text">{{ order.city }}{{ order.state }}</p>
-                            <p class="card-text">{{ order.country }}</p>
-                            <p class="card-text">{{ order.phone }}</p>
-                            <p class="card-text">{{ order.email }}</p>
-
-                            {% if order.order_note %}
-                                {{ order.order_note }}
-                            {% endif %}
-                </div>
-                </div>
-                            <div class="card">
-                        <div class="card-header">
-                            <h5>Payment Methods</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">paypal</p>
-                </div>
-                </div>
-
-                            <div class="card">
-                        <div class="card-header">
-                            <h5>Review Product</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-borderless table-shopping-cart">
-                <thead class="text-muted">
-                    <tr class="small text-uppercase">
-                        <th scope="col">Product</th>
-                        <th scope="col" width="120">Quantity</th>
-                        <th scope="col" width="120">Price</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cart_item in cart_items %}
-                    <tr>
-                        <td>
-                            <figure class="itemside align-items-center">
-                                <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm" alt="{{ cart_item.product.product_name }}"></div>
-                                <figcaption class="info">
-                                    <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-                                    <p class="text-muted small">
-                                    {% if cart_item.variations.all %}
-                                    {% for item in cart_item.variations.all %}
-                                     {{ item.variation_category | capfirst }}: {{ item.variation_value | capfirst }}<br>
-                                    {% endfor %}
-                                    {% endif %}
-                                    </p>
-                                </figcaption>
-                            </figure>
-                        </td>
-                        <td> 
-                            <label for="">{{cart_item.quantity }}</label>
-                        <td> 
-                            <div class="price-wrap"> 
-                                <var class="price">${{ cart_item.sub_total }}</var> 
-                                <small class="text-muted"> ${{ cart_item.product.price }} each </small> 
-                            </div> <!-- price-wrap .// -->
-                        </td>
-                        
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-                </div>
-                </div>
-                    
-                </aside>
-                <aside class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <dl class="dlist-align">
-                                <dt>Subtotal:</dt>
-                                <dd class="text-right">${{ total|floatformat:2 }}</dd>
-                            </dl>
-                            <dl class="dlist-align">
-                                <dt>Tax:</dt>
-                                <dd class="text-right">${{ tax|floatformat:2 }}</dd>
-                            </dl>
-                            <dl class="dlist-align">
-                                <dt>Grand Total:</dt>
-                                <dd class="text-right text-dark b"><strong>${{ grand_total|floatformat:2 }}</strong></dd>
-                            </dl>
-                            <hr>
-                            <p class="text-center mb-3">
-                                <img src="{% static 'images/misc/payments.png' %}" 
-                                     height="26" 
-                                     alt="Accepted Payment Methods">
-                            </p>
-
-                            <div id="paypal-button-container"></div>
-
-
-
-                            {% if request.user.is_authenticated %}
-                                <div id="paypal-button-container"></div>
-                                
-                            {% else %}
-                                <a href="{% url 'login' %}?next={% url 'checkout' %}" class="btn btn-primary btn-block">Login to Checkout</a>
-                            {% endif %}
-                            
-                        </div>
+        <h4 class="mb-4">Review your order and make Payment</h4>
+        <div class="row">
+            <aside class="col-lg-8">
+                <!-- Billing Address Card -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Billing Address</h5>
                     </div>
-                </aside>
-            </div>
-        
+                    <div class="card-body">
+                        <p class="card-text mb-1"><strong>Name:</strong> {{ order.full_name }}</p>
+                        <p class="card-text mb-1"><strong>Address:</strong> {{ order.full_address }}</p>
+                        <p class="card-text mb-1"><strong>City/State:</strong> {{ order.city }}, {{ order.state }}</p>
+                        <p class="card-text mb-1"><strong>Country:</strong> {{ order.country }}</p>
+                        <p class="card-text mb-1"><strong>Phone:</strong> {{ order.phone }}</p>
+                        <p class="card-text mb-1"><strong>Email:</strong> {{ order.email }}</p>
+
+                        {% if order.order_note %}
+                            <div class="mt-3">
+                                <strong>Order Note:</strong>
+                                <p class="card-text">{{ order.order_note }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Payment Method Card -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Payment Method</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">PayPal</p>
+                    </div>
+                </div>
+
+                <!-- Review Products Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Review Products</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless table-shopping-cart">
+                    <thead class="text-muted">
+                        <tr class="small text-uppercase">
+                            <th scope="col">Product</th>
+                            <th scope="col" width="120">Quantity</th>
+                            <th scope="col" width="120">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cart_item in cart_items %}
+                        <tr>
+                            <td>
+                                <figure class="itemside align-items-center">
+                                    <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm" alt="{{ cart_item.product.product_name }}"></div>
+                                    <figcaption class="info">
+                                        <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
+                                        <p class="text-muted small">
+                                        {% if cart_item.variations.all %}
+                                            {% for item in cart_item.variations.all %}
+                                                {{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}<br>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </p>
+                                    </figcaption>
+                                </figure>
+                            </td>
+                            <td>{{ cart_item.quantity }}</td>
+                            <td>
+                                <div class="price-wrap"> 
+                                    <var class="price">${{ cart_item.sub_total }}</var> 
+                                    <small class="text-muted">${{ cart_item.product.price }} each</small> 
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                    </div>
+                </div>
+            </aside>
+
+            <aside class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Order Summary</h5>
+                        <dl class="dlist-align">
+                            <dt>Subtotal:</dt>
+                            <dd class="text-right">${{ order.order_total|floatformat:2 }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Tax:</dt>
+                            <dd class="text-right">${{ order.tax|floatformat:2 }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Grand Total:</dt>
+                            <dd class="text-right text-dark h5"><strong>${{ grand_total|floatformat:2 }}</strong></dd>
+                        </dl>
+                        <hr>
+                        <div class="text-center mb-3">
+                            <img src="{% static 'images/misc/payments.png' %}" 
+                                 height="26" 
+                                 alt="Accepted Payment Methods"
+                                 class="img-fluid">
+                        </div>
+                        
+                        {% if request.user.is_authenticated %}
+                            <div id="paypal-button-container" class="mb-3"></div>
+                            <input type="hidden" id="grand_total" value="{{ grand_total }}">
+                        {% else %}
+                            <a href="{% url 'login' %}?next={% url 'checkout' %}" class="btn btn-primary btn-block">
+                                Login to Checkout
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'store' %}" class="btn btn-light btn-block mt-2">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </aside>
+        </div>
         <!-- ============================ COMPONENT 1 END .// ================================= -->
     </div>
 </section>
 
 
 <script>
-        paypal.Buttons({
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
+var amount = "{{ grand_total }}";
+var url = "{% url 'payments' %}";
+var csrftoken = getCookie('csrftoken');
+var orderID = "{{ order.order_number }}";
+var payment_method = "PayPal";
+
+paypal.Buttons({
+    style: {
+        color: 'blue',
+        shape: 'pill',
+        label: 'pay',
+        height: 40
+    },
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: amount,
+                }
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            console.log(details);
+            // Send data to server
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    orderID: orderID,
+                    transID: details.id,
+                    payment_method: payment_method,
+                    status: details.status,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Server response:', data);
+                alert('Transaction completed by ' + details.payer.name.given_name);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Payment completed but there was an error processing on the server');
+            });
+        });
+    }
+}).render('#paypal-button-container');
+</script>
+
+{% comment %} 
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var amount = "{{ grand_total }}";
+    var url = "{% url 'payments' %}";
+    var csrftoken = getCookie('csrftoken');
+    var orderID = "{{ order.order_number }}";
+    var payment_method = "PayPal";
+
+    function sendData(details) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                orderID: orderID,
+                transID: details.id,
+                payment_method: payment_method,
+                status: details.status,
+                // payerID: details.payer.payer_id,
+                // paymentID: data.orderID,
+            }),
+        });
+    }
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(amount).toFixed(2),
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                console.log(details);
+                sendData(details);
+            });
+        }
+    }).render('#paypal-button-container');
+</script> {% endcomment %}
+
+
+{% comment %} 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the grand total from the hidden input
+        var amount = parseFloat(document.getElementById('grand_total').value).toFixed(2);
+        
+        paypal.Buttons({
             style: {
-                color:  'blue',
-                shape:  'rect',
-                label:  'pay',
+                color: 'blue',
+                shape: 'rect',
+                label: 'pay',
                 height: 40
             },
 
@@ -142,17 +283,54 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '88.44'
-                        }
+                            value: amount,
+                            currency_code: 'USD'
+                        },
+                        description: 'Order #{{ order.order_number }}'
                     }]
                 });
             },
+
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
+                    // Submit the form to your server
+                    fetch('{% url "payments" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            orderID: '{{ order.order_number }}',
+                            payerID: details.payer.payer_id,
+                            paymentID: data.orderID,
+                            paymentMethod: 'PayPal',
+                            status: 'COMPLETED'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            window.location.href = '{% url "order_complete" %}?order_number={{ order.order_number }}&payment_id=' + data.payment_id;
+                        } else {
+                            alert('Payment successful but server processing failed');
+                        }
+                    });
                 });
+            },
+
+            onError: function(err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred during PayPal processing');
             }
         }).render('#paypal-button-container');
-    </script>
+    });
+</script> {% endcomment %}
 
 {% endblock content %}
+
+{% comment %} 
+    This template is for the payment page where users can review their order and make a payment.
+    It includes the billing address, payment method, product review, and order summary.
+    The PayPal button is integrated for payment processing.
+ {% endcomment %}
