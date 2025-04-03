@@ -13,6 +13,14 @@ from .models import Account
 from carts.views import _cart_id
 from carts.models import CartItem, Cart  # Added Cart import
 import requests
+from orders.models import Order,OrderProduct
+
+
+def my_orders(request):
+    return render(request,'accounts/my_orders.html',{})
+
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -137,6 +145,11 @@ def activate(request, uidb64, token):
 
 @login_required(login_url='login')
 def dashboard(request):
+    orders=Order.objects.order_by('-created_at').filter(user=request.user.id,is_ordered=True)
+    orders_count=orders.count()
+    context={
+        'orders_count':orders_count,
+    }
     return render(request, 'accounts/dashboard.html')
 
 def forgot_password(request):
