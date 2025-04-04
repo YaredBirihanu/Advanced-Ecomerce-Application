@@ -26,6 +26,25 @@ def payments(request):
     order.is_ordered = True
     order.save()
 
+    #move cart item to order table
+    cart_items=CartItem.objects.filter(user=request.user)
+    for item in cart_items:
+        orderproduct=OrderProduct()
+        orderproduct.order_id=order.id
+        orderproduct.payment=payment
+        orderproduct.user_id=request.user.id
+        orderproduct.product_id=item.product.id
+        orderproduct.quantity=item.quantity
+        orderproduct.product_price=item.product.price
+        orderproduct.ordered=True
+        orderproduct.save()
+
+        #reduce sold item
+        product=Product.objects.get(id=item.product.id)
+        product.stock -= item.quantity
+        product.save()
+        
+
     return render(request,'orders/payments.html')
 
 
