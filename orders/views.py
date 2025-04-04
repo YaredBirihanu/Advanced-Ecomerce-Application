@@ -39,10 +39,18 @@ def payments(request):
         orderproduct.ordered=True
         orderproduct.save()
 
-        #reduce sold item
-        product=Product.objects.get(id=item.product.id)
-        product.stock -= item.quantity
-        product.save()
+        cart_item=CartItem.objects.get(id=item.id)
+        product_variation=cart_item.variations.all()
+        orderproduct=OrderProduct.objects.get(id=orderproduct.id)
+        orderproduct.variations.set(product_variation)
+        orderproduct.save()
+
+        
+
+        # #reduce sold item
+        # product=Product.objects.get(id=item.product.id)
+        # product.stock -= item.quantity
+        # product.save()
         
 
     return render(request,'orders/payments.html')
