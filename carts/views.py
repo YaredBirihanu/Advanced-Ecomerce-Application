@@ -3,6 +3,7 @@ from .models import Cart, CartItem
 from store.models import Product, Variation
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.db.models import QuerySet
 
 def _cart_id(request):
     cart_id = request.session.get('cart_id')
@@ -12,8 +13,7 @@ def _cart_id(request):
         cart_id = request.session.session_key
         request.session['cart_id'] = cart_id
     return cart_id
-from django.shortcuts import get_object_or_404, redirect
-from django.db.models import QuerySet
+
 
 def add_cart(request, product_id):
     current_user = request.user
